@@ -14,7 +14,211 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      artist_profiles: {
+        Row: {
+          created_at: string
+          hourly_rate: number | null
+          id: string
+          portfolio_images: string[] | null
+          rating: number | null
+          skills: string[] | null
+          total_reviews: number | null
+          updated_at: string
+          user_id: string
+          years_experience: number | null
+        }
+        Insert: {
+          created_at?: string
+          hourly_rate?: number | null
+          id?: string
+          portfolio_images?: string[] | null
+          rating?: number | null
+          skills?: string[] | null
+          total_reviews?: number | null
+          updated_at?: string
+          user_id: string
+          years_experience?: number | null
+        }
+        Update: {
+          created_at?: string
+          hourly_rate?: number | null
+          id?: string
+          portfolio_images?: string[] | null
+          rating?: number | null
+          skills?: string[] | null
+          total_reviews?: number | null
+          updated_at?: string
+          user_id?: string
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
+      commission_bids: {
+        Row: {
+          artist_id: string
+          bid_amount: number
+          commission_id: string
+          created_at: string
+          estimated_days: number | null
+          id: string
+          message: string | null
+          status: string
+        }
+        Insert: {
+          artist_id: string
+          bid_amount: number
+          commission_id: string
+          created_at?: string
+          estimated_days?: number | null
+          id?: string
+          message?: string | null
+          status?: string
+        }
+        Update: {
+          artist_id?: string
+          bid_amount?: number
+          commission_id?: string
+          created_at?: string
+          estimated_days?: number | null
+          id?: string
+          message?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commission_bids_commission_id_fkey"
+            columns: ["commission_id"]
+            isOneToOne: false
+            referencedRelation: "commissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      commissions: {
+        Row: {
+          artist_id: string | null
+          budget_max: number | null
+          budget_min: number | null
+          category: string | null
+          created_at: string
+          customer_id: string
+          deadline: string | null
+          description: string
+          final_artwork: string[] | null
+          id: string
+          reference_images: string[] | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          artist_id?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
+          category?: string | null
+          created_at?: string
+          customer_id: string
+          deadline?: string | null
+          description: string
+          final_artwork?: string[] | null
+          id?: string
+          reference_images?: string[] | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          artist_id?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
+          category?: string | null
+          created_at?: string
+          customer_id?: string
+          deadline?: string | null
+          description?: string
+          final_artwork?: string[] | null
+          id?: string
+          reference_images?: string[] | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          artist_id: string
+          comment: string | null
+          commission_id: string
+          created_at: string
+          customer_id: string
+          id: string
+          rating: number
+        }
+        Insert: {
+          artist_id: string
+          comment?: string | null
+          commission_id: string
+          created_at?: string
+          customer_id: string
+          id?: string
+          rating: number
+        }
+        Update: {
+          artist_id?: string
+          comment?: string | null
+          commission_id?: string
+          created_at?: string
+          customer_id?: string
+          id?: string
+          rating?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_commission_id_fkey"
+            columns: ["commission_id"]
+            isOneToOne: false
+            referencedRelation: "commissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +227,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      user_role: "customer" | "artist"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +354,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["customer", "artist"],
+    },
   },
 } as const
