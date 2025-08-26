@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Palette, Users, Star, Zap } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import heroArtwork from "@/assets/hero-artwork.jpg";
 
 const Hero = () => {
+  const { user } = useAuth();
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-gradient-hero">
       {/* Background Elements */}
@@ -40,13 +43,17 @@ const Hero = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-          <Button variant="hero" size="lg" className="text-lg px-8 py-4">
-            <Users className="w-5 h-5" />
-            Find Artists
+          <Button variant="hero" size="lg" className="text-lg px-8 py-4" asChild>
+            <Link to={user ? "/dashboard" : "/auth"}>
+              <Users className="w-5 h-5" />
+              {user ? "Go to Dashboard" : "Get Started"}
+            </Link>
           </Button>
-          <Button variant="creative" size="lg" className="text-lg px-8 py-4">
-            <Zap className="w-5 h-5" />
-            Start Creating
+          <Button variant="creative" size="lg" className="text-lg px-8 py-4" asChild>
+            <Link to="#commissions">
+              <Zap className="w-5 h-5" />
+              Browse Artists
+            </Link>
           </Button>
         </div>
 

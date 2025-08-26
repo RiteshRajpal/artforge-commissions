@@ -1,9 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { Palette, Menu, User, Heart } from "lucide-react";
+import { Palette, Menu, User, LogOut } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Link } from "react-router-dom";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, profile, signOut } = useAuth();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20">
@@ -32,13 +37,42 @@ const Navigation = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
-              <User className="w-4 h-4" />
-              Sign In
-            </Button>
-            <Button variant="hero" size="sm">
-              Join as Artist
-            </Button>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
+                    <Avatar className="w-6 h-6 mr-2">
+                      <AvatarImage src={profile?.avatar_url || ''} />
+                      <AvatarFallback>
+                        <User className="w-4 h-4" />
+                      </AvatarFallback>
+                    </Avatar>
+                    {profile?.full_name || 'User'}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard">Dashboard</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={signOut}>
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" className="text-white hover:bg-white/20" asChild>
+                  <Link to="/auth">
+                    <User className="w-4 h-4" />
+                    Sign In
+                  </Link>
+                </Button>
+                <Button variant="hero" size="sm" asChild>
+                  <Link to="/auth">Join as Artist</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -64,13 +98,32 @@ const Navigation = () => {
                 Gallery
               </a>
               <div className="flex flex-col space-y-2 pt-4 border-t border-white/20">
-                <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 justify-start">
-                  <User className="w-4 h-4" />
-                  Sign In
-                </Button>
-                <Button variant="hero" size="sm" className="justify-start">
-                  Join as Artist
-                </Button>
+                {user ? (
+                  <>
+                    <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 justify-start" asChild>
+                      <Link to="/dashboard">
+                        <User className="w-4 h-4" />
+                        Dashboard
+                      </Link>
+                    </Button>
+                    <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 justify-start" onClick={signOut}>
+                      <LogOut className="w-4 h-4" />
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 justify-start" asChild>
+                      <Link to="/auth">
+                        <User className="w-4 h-4" />
+                        Sign In
+                      </Link>
+                    </Button>
+                    <Button variant="hero" size="sm" className="justify-start" asChild>
+                      <Link to="/auth">Join as Artist</Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>

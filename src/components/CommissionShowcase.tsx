@@ -2,8 +2,11 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, Clock, Palette, User } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const CommissionShowcase = () => {
+  const { user } = useAuth();
   const mockCommissions = [
     {
       id: 1,
@@ -92,9 +95,11 @@ const CommissionShowcase = () => {
                   ))}
                 </div>
                 
-                <Button variant="default" className="w-full">
-                  <Palette className="w-4 h-4" />
-                  Commission Now
+                <Button variant="default" className="w-full" asChild>
+                  <Link to={user ? "/dashboard" : "/auth"}>
+                    <Palette className="w-4 h-4" />
+                    Commission Now
+                  </Link>
                 </Button>
               </div>
             </Card>
@@ -102,8 +107,8 @@ const CommissionShowcase = () => {
         </div>
 
         <div className="text-center">
-          <Button variant="creative" size="lg">
-            Browse All Artists
+          <Button variant="creative" size="lg" asChild>
+            <Link to={user ? "/dashboard" : "/auth"}>Browse All Artists</Link>
           </Button>
         </div>
       </div>
