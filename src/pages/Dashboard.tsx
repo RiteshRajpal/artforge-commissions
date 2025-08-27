@@ -10,6 +10,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Palette, Plus, Eye, MessageSquare, DollarSign, User, Star } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import CommissionForm from "@/components/CommissionForm";
+import BidForm from "@/components/BidForm";
+import PremiumScanner from "@/components/PremiumScanner";
 
 interface Commission {
   id: string;
@@ -136,6 +139,7 @@ const Dashboard = () => {
               <TabsTrigger value="commissions">
                 {profile?.role === 'artist' ? 'Available Work' : 'My Commissions'}
               </TabsTrigger>
+              <TabsTrigger value="scanner">AI Scanner</TabsTrigger>
               <TabsTrigger value="profile">Profile</TabsTrigger>
             </TabsList>
 
@@ -182,6 +186,11 @@ const Dashboard = () => {
                 </Card>
               </div>
 
+              {/* Premium Scanner Section */}
+              <div className="mt-8">
+                <PremiumScanner />
+              </div>
+
               <Card className="p-6">
                 <h3 className="text-xl font-semibold mb-4">Recent Activity</h3>
                 {commissions.length === 0 ? (
@@ -222,10 +231,7 @@ const Dashboard = () => {
                   {profile?.role === 'artist' ? 'Available Commissions' : 'My Commissions'}
                 </h2>
                 {profile?.role === 'customer' && (
-                  <Button className="gap-2">
-                    <Plus className="w-4 h-4" />
-                    Create Commission
-                  </Button>
+                  <CommissionForm onSuccess={fetchCommissions} />
                 )}
               </div>
 
@@ -261,16 +267,19 @@ const Dashboard = () => {
                             <Eye className="w-4 h-4" />
                           </Button>
                           {profile?.role === 'artist' && commission.status === 'open' && (
-                            <Button size="sm">
-                              <MessageSquare className="w-4 h-4 mr-2" />
-                              Bid
-                            </Button>
+                            <BidForm commissionId={commission.id} onSuccess={fetchCommissions} />
                           )}
                         </div>
                       </div>
                     </div>
                   </Card>
                 ))}
+              </div>
+            </TabsContent>
+
+            <TabsContent value="scanner" className="space-y-6">
+              <div className="flex justify-center">
+                <PremiumScanner />
               </div>
             </TabsContent>
 
